@@ -1,24 +1,28 @@
 package com.mace.kmptemplate
 
-import App
+import BloodViewModel
+import ScreenNavigator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
+import com.mace.mace_template.ui.theme.MaceTemplateTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val bloodViewModel: BloodViewModel by viewModels()
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
-            App()
+            MaceTemplateTheme {
+                ScreenNavigator(bloodViewModel)
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
+    override fun onDestroy() {
+        super.onDestroy()
+        //repository.saveStagingDatabase(Constants.MODIFIED_DATABASE_NAME, getDatabasePath(Constants.MODIFIED_DATABASE_NAME))
+    }
 }
