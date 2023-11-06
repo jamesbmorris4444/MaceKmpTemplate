@@ -9,17 +9,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import co.touchlab.kermit.Logger
+import com.jetbrains.handson.kmm.shared.SpaceXSDK
 import moe.tlaster.precompose.PreComposeApp
-import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 
-
 data class AppBarState(
-    val title: String = "Last Chance",
+    val title: String = Strings.get("rocket_launch_pending_title"),
     val actions: (@Composable RowScope.() -> Unit)? = null,
     val navigationIcon: (@Composable () -> Unit)? = null
 )
@@ -27,14 +27,15 @@ data class AppBarState(
 // Called one time at app startup
 @Composable
 fun ScreenNavigator(
-    viewModel: BloodViewModel
+    viewModel: BloodViewModel,
+    repository: Repository,
+    sdk: SpaceXSDK,
+    openDrawer: () -> Unit = { }
 ) {
-    Logger.d("JIMX 1")
     PreComposeApp {
-        val appBarState by remember { mutableStateOf(AppBarState()) }
+        var appBarState by remember { mutableStateOf(AppBarState()) }
         val navigator = rememberNavigator()
-        val completed = viewModel.refreshCompletedState.collectAsStateWithLifecycle()
-        Logger.d("JIMX 1")
+        Logger.d("JIMX 1   ${ScreenNames.RocketLaunch.name}")
         Scaffold(
             topBar = {
                 StartScreenAppBar(appBarState = appBarState)
@@ -43,17 +44,31 @@ fun ScreenNavigator(
             Box(modifier = Modifier.padding(internalPadding)) {
                 NavHost(
                     navigator = navigator,
-                    // Navigation transition for the scenes in this NavHost, this is optional
                     navTransition = NavTransition(),
-                    initialRoute = "home",
+                    initialRoute = ScreenNames.RocketLaunch.name,
                 ) {
-                    // Define a scene to the navigation graph
                     scene(
-                        route = "home",
-                        // Navigation transition for this scene, this is optional
+                        route =  ScreenNames.RocketLaunch.name,
                         navTransition = NavTransition(),
                     ) {
-                        Text(text = "Hello  Hello World!")
+                        Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.RocketLaunch.name}")
+                        RocketLaunchScreen(
+                            repository = repository,
+                            sdk = sdk,
+                            configAppBar = {
+                                appBarState = it
+                            },
+                            canNavigateBack = true,
+                            navigateUp = { navigator.goBack() },
+                            openDrawer = openDrawer,
+                            onItemButtonClicked = {
+                                //donor = it
+                                //transitionToCreateProductsScreen = true
+                                //navController.navigate(manageDonorAfterSearchStringName)
+                            },
+                            viewModel = viewModel,
+                            title = Strings.get("rocket_launch_complete_title")
+                        )
                     }
                 }
             }
@@ -70,4 +85,13 @@ fun StartScreenAppBar(
         actions = { appBarState.actions?.invoke(this) },
         navigationIcon = { appBarState.navigationIcon?.invoke() }
     )
+}
+
+enum class ScreenNames(val inDrawer: Boolean, val string: String) {
+    RocketLaunch(false, Strings.get("Rocket Launch")),
+//    CreateProducts(false, R.string.create_blood_product_title),
+//    ManageDonorAfterSearch(false, R.string.manage_donor_after_search_title),
+//    ManageDonorFromDrawer(true, R.string.manage_donor_from_drawer_title),
+//    ReassociateDonation(true, R.string.reassociate_donation_title),
+//    ViewDonorList(true, R.string.view_donor_list_title)
 }

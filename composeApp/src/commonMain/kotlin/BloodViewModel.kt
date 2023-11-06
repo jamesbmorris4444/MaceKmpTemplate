@@ -1,1 +1,1 @@
-class BloodViewModel: ViewModel()
+class BloodViewModel : ViewModel()

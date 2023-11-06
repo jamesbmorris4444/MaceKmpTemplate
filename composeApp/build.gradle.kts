@@ -1,3 +1,4 @@
+
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
@@ -5,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    kotlin("plugin.serialization").version("1.9.10")
+    id("com.squareup.sqldelight").version("1.5.5")
 }
 
 kotlin {
@@ -36,6 +39,14 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.ui.tooling.preview)
                 implementation(libs.androidx.activity.compose)
+                implementation(libs.ktor.client.android)
+                implementation(libs.sql.android)
+            }
+        }
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.ios)
+                implementation(libs.sql.ios)
             }
         }
         val commonMain by getting {
@@ -48,6 +59,14 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(libs.precompose.navigation)
                 implementation(libs.kermit)
+                implementation(libs.coroutines.core)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content)
+                implementation(libs.ktor.serialization)
+                implementation(libs.sql)
+                implementation(libs.colormath)
+                implementation(libs.colormath.compose)
+                //implementation(libs.date.time)
             }
         }
     }
@@ -75,9 +94,17 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/license.txt")
+        resources.excludes.add("META-INF/NOTICE")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/notice.txt")
+        resources.excludes.add("META-INF/ASL2.0")
+        resources.excludes.add("META-INF/*.kotlin_module")
+        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        resources.excludes.add("/META-INF/*")
     }
     buildTypes {
         getByName("release") {
@@ -90,6 +117,12 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+    }
+}
+
+sqldelight {
+    database("AppDatabase") {
+        packageName = "com.jetbrains.handson.kmm.shared.cache"
     }
 }
 

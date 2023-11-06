@@ -4,4 +4,6 @@ plugins {
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    kotlin("plugin.serialization").version("1.9.10") apply false
+    id("com.squareup.sqldelight").version("1.5.5") apply false
 }

@@ -18,6 +18,11 @@ junit = "4.13.2"
 precompose-navigation = "1.5.5"
 timber = "4.7.1"
 kermit = "2.0.2"
+coroutines-core = "1.7.3"
+ktor-version = "2.3.5"
+sql-version = "1.5.5"
+date-time = "0.4.1"
+colormath = "3.3.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -37,6 +42,18 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 precompose-navigation = { module = "moe.tlaster:precompose", version.ref = "precompose-navigation" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-core" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
+ktor-client-content = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor-version" }
+ktor-client-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-version" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+sql = { module = "com.squareup.sqldelight:runtime", version.ref = "sql-version" }
+sql-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sql-version" }
+sql-ios = { module = "com.squareup.sqldelight:native-driver", version.ref = "sql-version" }
+date-time = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "date-time" }
+colormath = { module = "com.github.ajalt.colormath:colormath", version.ref = "colormath" }
+colormath-compose = { module = "com.github.ajalt.colormath:colormath-ext-jetpack-compose", version.ref = "colormath" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
