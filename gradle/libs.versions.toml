@@ -23,6 +23,8 @@ ktor-version = "2.3.5"
 sql-version = "1.5.5"
 date-time = "0.4.1"
 colormath = "3.3.2"
+org-jetbrains-kotlin-android = "1.9.0"
+moko-resources = "0.23.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +56,8 @@ sql-ios = { module = "com.squareup.sqldelight:native-driver", version.ref = "sql
 date-time = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "date-time" }
 colormath = { module = "com.github.ajalt.colormath:colormath", version.ref = "colormath" }
 colormath-compose = { module = "com.github.ajalt.colormath:colormath-ext-jetpack-compose", version.ref = "colormath" }
+moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
+moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

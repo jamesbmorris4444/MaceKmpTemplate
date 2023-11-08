@@ -66,9 +66,13 @@ kotlin {
                 implementation(libs.sql)
                 implementation(libs.colormath)
                 implementation(libs.colormath.compose)
-                //implementation(libs.date.time)
+                implementation(libs.moko.resources)
+                implementation(libs.moko.resources.compose)
             }
         }
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val iosX64Main by getting
     }
 }
 
@@ -125,4 +129,3 @@ sqldelight {
         packageName = "com.jetbrains.handson.kmm.shared.cache"
     }
 }
-

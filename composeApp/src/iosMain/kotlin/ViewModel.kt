@@ -1,3 +1,4 @@
+import com.jetbrains.handson.kmm.shared.cache.Donor
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -21,6 +22,10 @@ actual abstract class ViewModel actual constructor() {
     actual val launchesAvailableState: MutableStateFlow<List<RocketLaunch>>
         get() = privateLaunchesAvailableState
 
+    internal actual val privateDonorsAvailableState: MutableStateFlow<List<Donor>> = MutableStateFlow(listOf())
+    actual val donorsAvailableState: MutableStateFlow<List<Donor>>
+        get() = privateDonorsAvailableState
+
     actual fun updateRefreshCompletedState(value: Boolean) {
         privateRefreshCompletedState.value = value
     }
@@ -33,7 +38,12 @@ actual abstract class ViewModel actual constructor() {
         privateRefreshFailureState.value = value
     }
 
-    actual fun updateLaunchesAvailableState(value: List<RocketLaunch>) {
-        privateLaunchesAvailableState.value = value
+    actual fun updateLaunchesAvailableState(launches: List<RocketLaunch>) {
+        privateLaunchesAvailableState.value = launches
     }
+
+    actual fun updateDonorsAvailableState(donors: List<Donor>) {
+        privateDonorsAvailableState.value = donors
+    }
+
 }

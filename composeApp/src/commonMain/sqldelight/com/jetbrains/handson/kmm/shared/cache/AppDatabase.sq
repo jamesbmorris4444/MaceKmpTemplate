@@ -1,21 +1,24 @@
-CREATE TABLE Launch (
-    flightNumber INTEGER NOT NULL,
-    missionName TEXT NOT NULL,
-    details TEXT,
-    launchSuccess INTEGER AS Boolean DEFAULT NULL,
-    launchDateUTC TEXT NOT NULL,
-    patchUrlSmall TEXT,
-    patchUrlLarge TEXT,
-    articleUrl TEXT
+CREATE TABLE Donor (
+    lastName TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    middleName TEXT NOT NULL,
+    branch TEXT NOT NULL,
+    aboRh TEXT NOT NULL,
+    dob TEXT NOT NULL,
+    gender INTEGER AS Boolean NOT NULL
 );
 
-insertLaunch:
-INSERT INTO Launch(flightNumber, missionName, details, launchSuccess, launchDateUTC, patchUrlSmall, patchUrlLarge, articleUrl)
-VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+insertDonor:
+INSERT INTO Donor(lastName, firstName, middleName, branch, aboRh, dob, gender)
+VALUES(?, ?, ?, ?, ?, ?, ?);
 
-removeAllLaunches:
-DELETE FROM Launch;
+removeAllDonors:
+DELETE FROM Donor;
 
-selectAllLaunchesInfo:
-SELECT Launch.*
-FROM Launch;
+selectAllDonorsInfo:
+SELECT Donor.*
+FROM Donor;
+
+selectDonorsInfo:
+SELECT * FROM Donor
+WHERE lastName LIKE :lastNameQuery;

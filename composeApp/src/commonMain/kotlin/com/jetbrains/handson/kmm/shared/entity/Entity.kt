@@ -1,6 +1,7 @@
 package com.jetbrains.handson.kmm.shared.entity
 
 import DateTime
+import com.jetbrains.handson.kmm.shared.cache.Donor
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -40,22 +41,17 @@ data class Patch(
     val large: String?
 )
 
-@Serializable
-data class Donor(
-    @SerialName("vote_count") var voteCount: Int = 0,
-    @SerialName("video") var video: Boolean = false,
-    @SerialName("vote_average") var voteAverage: Float = 0f,
-    @SerialName("title") var lastName: String = "",
-    @SerialName("popularity") var popularity: Float = 0f,
-    @SerialName("poster_path") var firstName: String = "",
-    @SerialName("original_language") var middleName: String = "",
-    @SerialName("original_title") var branch: String = "",
-    @SerialName("backdrop_path") var aboRh: String = "",
-    @SerialName("adult") var gender: Boolean = false,
-    @SerialName("overview") var overview: String = "",
-    @SerialName("release_date") var dob: String = "",
-    var inReassociate: Boolean = false
-)
+//@Serializable
+//data class Donor(
+//    var lastName: String = "",
+//    var firstName: String = "",
+//    var middleName: String = "",
+//    var branch: String = "",
+//    var aboRh: String = "",
+//    var gender: Boolean = false,
+//    var dob: String = "",
+//    var inReassociate: Boolean = false
+//)
 
 @Serializable
 data class Product(

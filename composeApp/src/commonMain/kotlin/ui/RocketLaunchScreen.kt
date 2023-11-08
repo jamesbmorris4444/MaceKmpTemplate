@@ -1,4 +1,6 @@
-
+package ui
+import BloodViewModel
+import Repository
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +24,6 @@ import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import com.github.ajalt.colormath.extensions.android.composecolor.toComposeColor
 import com.github.ajalt.colormath.model.RGB
-import com.jetbrains.handson.kmm.shared.SpaceXSDK
-import com.jetbrains.handson.kmm.shared.entity.Donor
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
@@ -31,13 +31,7 @@ import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 @Composable
 fun RocketLaunchScreen(
     repository: Repository,
-    sdk: SpaceXSDK,
-    forceReload: Boolean = true,
     configAppBar: (AppBarState) -> Unit,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    openDrawer: () -> Unit,
-    onItemButtonClicked: (donor: Donor) -> Unit,
     viewModel: BloodViewModel,
     title: String
 ) {
@@ -51,21 +45,6 @@ fun RocketLaunchScreen(
         )
     }
 
-    fun success(list: List<RocketLaunch>) {
-        Logger.d("JIMX RocketLaunchScreen success=$list")
-        viewModel.updateRefreshCompletedState(true)
-        viewModel.updateDatabaseInvalidState(false)
-        viewModel.updateRefreshFailureState("")
-        viewModel.updateLaunchesAvailableState(list)
-    }
-
-    fun failure(message: String) {
-        Logger.d("JIMX RocketLaunchScreen failure=$message")
-        viewModel.updateRefreshCompletedState(true)
-        viewModel.updateDatabaseInvalidState(false)
-        viewModel.updateRefreshFailureState(message)
-    }
-
     Logger.d("JIMX Compose: ${ScreenNames.RocketLaunch.name}")
 //    viewModel.setAppDatabase()
 //    val showStandardModalState = viewModel.showStandardModalState.observeAsState().value ?: StandardModalArgs()
@@ -76,7 +55,17 @@ fun RocketLaunchScreen(
     when {
         isInvalid -> {
             composableScope.launch {
-                repository.refreshDatabase(sdk, ::success, ::failure)
+                val pair = repository.refreshDatabase(composableScope)
+                if (pair.second.isEmpty()) {
+                    viewModel.updateRefreshCompletedState(true)
+                    viewModel.updateDatabaseInvalidState(false)
+                    viewModel.updateRefreshFailureState("")
+                    viewModel.updateLaunchesAvailableState(pair.first)
+                } else {
+                    viewModel.updateRefreshCompletedState(true)
+                    viewModel.updateDatabaseInvalidState(false)
+                    viewModel.updateRefreshFailureState(pair.second)
+                }
             }
             Column(
                 modifier = Modifier.fillMaxSize(),
