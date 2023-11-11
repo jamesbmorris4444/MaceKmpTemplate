@@ -1,5 +1,5 @@
 CREATE TABLE Donor (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     lastName TEXT NOT NULL,
     firstName TEXT NOT NULL,
     middleName TEXT NOT NULL,
@@ -10,23 +10,11 @@ CREATE TABLE Donor (
 );
 
 insertDonor:
-INSERT INTO Donor(lastName, firstName, middleName, branch, aboRh, dob, gender)
-VALUES(?, ?, ?, ?, ?, ?, ?);
+INSERT INTO Donor(id, lastName, firstName, middleName, branch, aboRh, dob, gender)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?);
 
 lastInsertDonorId:
 SELECT last_insert_rowid();
-
-insertOrReplace:
-INSERT OR REPLACE INTO Donor(
-  lastName,
-  firstName,
-  middleName,
-  branch,
-  aboRh,
-  dob,
-  gender
-)
-VALUES(?, ?, ?, ?, ?, ?, ?);
 
 removeAllDonors:
 DELETE FROM Donor;

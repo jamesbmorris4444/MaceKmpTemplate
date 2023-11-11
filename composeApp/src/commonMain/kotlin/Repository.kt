@@ -27,8 +27,6 @@ interface Repository {
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
 
-    val emptyDonor = Donor(0,"", "", "", "", "", "", false)
-
 //    private lateinit var mainAppDatabase: AppDatabase
 //    private lateinit var stagingAppDatabase: AppDatabase
 //    private val donorsService: APIInterface = APIClient.client
@@ -341,7 +339,7 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //     */
 //
     override fun insertDonorIntoDatabase(donor: Donor) {
-        Database(databaseDriverFactory).insertOrReplaceDonor(donor)
+        Database(databaseDriverFactory).insertDonor(donor)
     }
 //
 //    override fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {

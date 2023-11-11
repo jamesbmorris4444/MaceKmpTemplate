@@ -49,6 +49,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.ios)
                 implementation(libs.sql.ios)
+                implementation(libs.koin.core)
             }
         }
         val commonMain by getting {

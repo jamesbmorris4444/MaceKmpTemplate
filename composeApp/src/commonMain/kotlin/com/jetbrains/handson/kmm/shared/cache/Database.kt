@@ -40,18 +40,6 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         )
     }
 
-    internal fun insertOrReplaceDonor(donor: Donor) {
-        dbQuery.insertOrReplace(
-            lastName = donor.lastName,
-            middleName = donor.middleName,
-            firstName = donor.firstName,
-            branch = donor.branch,
-            aboRh = donor.aboRh,
-            dob = donor.dob,
-            gender = donor.gender
-        )
-    }
-
     internal fun createDonor(donors: List<Donor>) {
         dbQuery.transaction {
             donors.forEach { donor ->
@@ -62,8 +50,9 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    private fun insertDonor(donor: Donor) {
+    fun insertDonor(donor: Donor) {
         dbQuery.insertDonor(
+            id = null,
             lastName = donor.lastName,
             middleName = donor.middleName,
             firstName = donor.firstName,

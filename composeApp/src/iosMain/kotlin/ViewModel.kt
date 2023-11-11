@@ -3,9 +3,13 @@ import com.jetbrains.handson.kmm.shared.cache.Product
 import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import ui.StandardModalArgs
 
-actual abstract class ViewModel actual constructor() {
+actual abstract class ViewModel actual constructor() : KoinComponent {
+
+    private val repository: Repository by inject()
 
     actual fun onCleared() {}
 
@@ -86,20 +90,12 @@ actual abstract class ViewModel actual constructor() {
     actual val incorrectDonorWithProductsState: MutableStateFlow<DonorWithProducts>
         get() = privateIncorrectDonorWithProductsState
 
-//    actual fun changeCorrectDonorWithProductsState(donor: Donor) {
-//        privateCorrectDonorWithProductsState.value = repository.donorFromNameAndDateWithProducts(donor) ?: DonorWithProducts(emptyDonor, listOf())
-//    }
-//
-//    actual fun changeIncorrectDonorWithProductsState(donor: Donor) {
-//        privateIncorrectDonorWithProductsState.value = repository.donorFromNameAndDateWithProducts(donor) ?: DonorWithProducts(emptyDonor, listOf())
-//    }
-
-        actual fun changeCorrectDonorWithProductsState(donor: Donor) {
-        privateCorrectDonorWithProductsState.value = null ?: DonorWithProducts(emptyDonor, listOf())
+    actual fun changeCorrectDonorWithProductsState(donor: Donor) {
+        privateCorrectDonorWithProductsState.value = repository.donorFromNameAndDateWithProducts(donor) ?: DonorWithProducts(emptyDonor, listOf())
     }
 
     actual fun changeIncorrectDonorWithProductsState(donor: Donor) {
-        privateIncorrectDonorWithProductsState.value = null ?: DonorWithProducts(emptyDonor, listOf())
+        privateIncorrectDonorWithProductsState.value = repository.donorFromNameAndDateWithProducts(donor) ?: DonorWithProducts(emptyDonor, listOf())
     }
 
     internal actual val privateSingleSelectedProductListState: MutableStateFlow<List<Product>> = MutableStateFlow(listOf())
