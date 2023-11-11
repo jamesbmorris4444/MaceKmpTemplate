@@ -27,8 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.github.ajalt.colormath.extensions.android.composecolor.toComposeColor
-import com.github.ajalt.colormath.model.RGB
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.Navigator
@@ -55,7 +53,7 @@ fun DrawerAppComponent(
         Column(
             modifier = Modifier
                 .padding(top = 100.dp)
-                .background(color = RGB("#000000").toComposeColor()),
+                .background(color = MaterialTheme.colors.background),
             horizontalAlignment = Alignment.Start
         ) {
             Box(
@@ -74,7 +72,7 @@ fun DrawerAppComponent(
                         .align(Alignment.BottomCenter),
                     text = "",
                     style = MaterialTheme.typography.body1,
-                    color = RGB("#ffffff").toComposeColor()
+                    color = MaterialTheme.colors.onBackground
                 )
             }
             Spacer(Modifier.height(24.dp))
@@ -91,18 +89,18 @@ fun DrawerAppComponent(
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = if (currentScreen.value == screen) {
-                                RGB("#000000").toComposeColor()
+                                MaterialTheme.colors.onSurface
                             } else {
-                                RGB("#aa00aa").toComposeColor()
+                                MaterialTheme.colors.surface
                             }
                         ) {
                             Text(
                                 text = screen.string,
                                 modifier = Modifier.padding(16.dp),
                                 color = if (currentScreen.value == screen) {
-                                    RGB("#000000").toComposeColor()
+                                    MaterialTheme.colors.onBackground
                                 } else {
-                                    RGB("#ffffff").toComposeColor()
+                                    MaterialTheme.colors.background
                                 }
                             )
                         }
@@ -139,7 +137,7 @@ fun DrawerAppComponent(
                     closeDrawer = { coroutineScope.launch { drawerState.close() } }
                 )
             },
-            drawerBackgroundColor = RGB("#000000").toComposeColor(),
+            drawerBackgroundColor = MaterialTheme.colors.onBackground,
             content = {
                 BodyContentComponent(
                     navigator = navigator,

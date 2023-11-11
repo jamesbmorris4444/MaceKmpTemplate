@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -40,8 +41,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.github.ajalt.colormath.extensions.android.composecolor.toComposeColor
-import com.github.ajalt.colormath.model.RGB
 import com.jetbrains.handson.kmm.shared.cache.Donor
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 
@@ -56,58 +55,44 @@ fun DonateProductsScreen(
     viewModel: BloodViewModel,
     title: String
 ) {
-//    @Composable
-//    fun CustomCircularProgressBar(){
-//        CircularProgressIndicator(
-//            modifier = Modifier.size(120.dp),
-//            color = Color.Green,
-//            strokeWidth = 6.dp)
-//    }
     val completed = viewModel.refreshCompletedState.collectAsStateWithLifecycle().value
     val isInvalid = viewModel.databaseInvalidState.collectAsStateWithLifecycle().value
+    val showStandardModalState = viewModel.showStandardModalState.collectAsStateWithLifecycle().value
     val failure = viewModel.refreshFailureState.collectAsStateWithLifecycle().value
-    var donors: List<Donor> = listOf()
 
     when {
         isInvalid -> {
-            donors = repository.refreshDonors()
+            repository.refreshDonors()
             viewModel.updateRefreshCompletedState(true)
             viewModel.updateDatabaseInvalidState(false)
             viewModel.updateRefreshFailureState("")
-//            Column(
-//                modifier = Modifier.fillMaxSize(),
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                CustomCircularProgressBar()
-//            }
         }
-//        failure.isNotEmpty() -> {
-//            if (showStandardModalState.topIconResId >= 0) {
-//                StandardModal(
-//                    showStandardModalState.topIconResId,
-//                    showStandardModalState.titleText,
-//                    showStandardModalState.bodyText,
-//                    showStandardModalState.positiveText,
-//                    showStandardModalState.negativeText,
-//                    showStandardModalState.neutralText,
-//                    showStandardModalState.onDismiss
-//                )
-//            } else {
-//                viewModel.changeShowStandardModalState(
-//                    StandardModalArgs(
-//                        topIconResId = R.drawable.notification,
-//                        titleText = viewModel.getResources().getString(R.string.failure_db_entries_title_text),
-//                        bodyText = viewModel.getResources().getString(R.string.failure_db_entries_body_text, failure),
-//                        positiveText = viewModel.getResources().getString(R.string.positive_button_text_ok),
-//                    ) {
-//                        navigateUp()
-//                        viewModel.changeShowStandardModalState(StandardModalArgs())
-//                        viewModel.changeRefreshFailureState("")
-//                    }
-//                )
-//            }
-//        }
+        failure.isNotEmpty() -> {
+            if (showStandardModalState.topIconId.isNotEmpty()) {
+                StandardModal(
+                    showStandardModalState.topIconId,
+                    showStandardModalState.titleText,
+                    showStandardModalState.bodyText,
+                    showStandardModalState.positiveText,
+                    showStandardModalState.negativeText,
+                    showStandardModalState.neutralText,
+                    showStandardModalState.onDismiss
+                )
+            } else {
+                viewModel.changeShowStandardModalState(
+                    StandardModalArgs(
+                        topIconId = "drawable/notification.xml",
+                        titleText = Strings.get("failure_db_entries_title_text"),
+                        bodyText = Strings.format("failure_db_entries_body_text", failure),
+                        positiveText = Strings.get("positive_button_text_ok")
+                    ) {
+                        navigateUp()
+                        viewModel.changeShowStandardModalState(StandardModalArgs())
+                        viewModel.updateRefreshFailureState("")
+                    }
+                )
+            }
+        }
         completed -> {
             DonateProductsHandler(
                 repository,
@@ -148,8 +133,7 @@ fun DonateProductsHandler(
     @Composable
     fun DonorList(donors: List<Donor>, onItemButtonClicked: (donor: Donor) -> Unit) {
         LazyColumn(
-            modifier = Modifier
-                .testTag("LazyColumn")
+            modifier = Modifier.testTag("LazyColumn")
         ) {
             items(items = donors) {
                 Column(modifier = Modifier
@@ -166,7 +150,7 @@ fun DonateProductsHandler(
                         it.gender
                     )
                 }
-                Divider(color = RGB("#000000").toComposeColor(), thickness = 2.dp)
+                Divider(color = MaterialTheme.colors.onBackground, thickness = 2.dp)
             }
         }
     }
@@ -174,6 +158,7 @@ fun DonateProductsHandler(
     Logger.d("launch DonateProductsScreen=$title    donors=$foundDonors")
 
     LaunchedEffect(key1 = true) {
+        Logger.d("JIMX CAN GO BACK AAA=$canNavigateBack")
         configAppBar(
             AppBarState(
                 title = title,
@@ -186,6 +171,7 @@ fun DonateProductsHandler(
                     }
                 },
                 navigationIcon = {
+                    Logger.d("JIMX CAN GO BACK BBB=$canNavigateBack")
                     if (canNavigateBack) {
                         IconButton(onClick = navigateUp.also {  }) {
                             Icon(
@@ -235,13 +221,13 @@ fun DonateProductsHandler(
             WidgetButton(
                 padding = PaddingValues(top = 16.dp),
                 onClick = {
-                    onItemButtonClicked(Donor(lastName = "", middleName = "", firstName = "", dob = "", aboRh = "", branch = "", gender = true))
+                    onItemButtonClicked(viewModel.emptyDonor)
                 },
                 buttonText = Strings.get("new_donor_button_text")
             )
             Spacer(modifier = Modifier.height(20.dp))
             if (foundDonors.isNotEmpty()) {
-                Divider(color = RGB("#000000").toComposeColor(), thickness = 2.dp)
+                Divider(color = MaterialTheme.colors.onBackground, thickness = 2.dp)
             }
             DonorList(foundDonors, onItemButtonClicked)
         }

@@ -41,6 +41,8 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.ktor.client.android)
                 implementation(libs.sql.android)
+                implementation(libs.koin.core)
+                implementation(libs.koin.android)
             }
         }
         val iosMain by getting {
@@ -98,16 +100,6 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
-        resources.excludes.add("META-INF/DEPENDENCIES")
-        resources.excludes.add("META-INF/LICENSE")
-        resources.excludes.add("META-INF/LICENSE.txt")
-        resources.excludes.add("META-INF/license.txt")
-        resources.excludes.add("META-INF/NOTICE")
-        resources.excludes.add("META-INF/NOTICE.txt")
-        resources.excludes.add("META-INF/notice.txt")
-        resources.excludes.add("META-INF/ASL2.0")
-        resources.excludes.add("META-INF/*.kotlin_module")
-        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         resources.excludes.add("/META-INF/*")
     }
     buildTypes {

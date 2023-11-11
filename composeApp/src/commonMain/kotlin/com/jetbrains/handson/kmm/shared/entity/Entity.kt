@@ -2,6 +2,7 @@ package com.jetbrains.handson.kmm.shared.entity
 
 import DateTime
 import com.jetbrains.handson.kmm.shared.cache.Donor
+import com.jetbrains.handson.kmm.shared.cache.Product
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -53,17 +54,17 @@ data class Patch(
 //    var inReassociate: Boolean = false
 //)
 
-@Serializable
-data class Product(
-    var donorId: Long = 0,
-    @SerialName("din") var din: String = "",
-    @SerialName("abo_rh") var aboRh: String = "",
-    @SerialName("product_code") var productCode: String = "",
-    @SerialName("expiration_date") var expirationDate: String = "",
-    var removedForReassociation: Boolean = false,
-    var inReassociate: Boolean = false
-
-)
+//@Serializable
+//data class Product(
+//    var donorId: Long = 0,
+//    @SerialName("din") var din: String = "",
+//    @SerialName("abo_rh") var aboRh: String = "",
+//    @SerialName("product_code") var productCode: String = "",
+//    @SerialName("expiration_date") var expirationDate: String = "",
+//    var removedForReassociation: Boolean = false,
+//    var inReassociate: Boolean = false
+//
+//)
 
 data class DonorWithProducts(
     val donor: Donor,

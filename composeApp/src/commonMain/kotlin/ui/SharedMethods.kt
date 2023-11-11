@@ -5,8 +5,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.github.ajalt.colormath.extensions.android.composecolor.toComposeColor
-import com.github.ajalt.colormath.model.RGB
 
 //@Composable
 //fun ProductListContent(
@@ -140,12 +138,12 @@ fun DonorElementText(
     Text(
         modifier = Modifier.testTag("item"),
         text = "$donorLastName, $donorFirstName $donorMiddleName (${if (gender) "Male" else "Female"})",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
     Text(
         text = "DOB:$dob  AboRh:$aboRh  Branch:$branch",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
 }

@@ -1,4 +1,5 @@
 CREATE TABLE Donor (
+    id INTEGER NOT NULL PRIMARY KEY,
     lastName TEXT NOT NULL,
     firstName TEXT NOT NULL,
     middleName TEXT NOT NULL,
@@ -12,6 +13,21 @@ insertDonor:
 INSERT INTO Donor(lastName, firstName, middleName, branch, aboRh, dob, gender)
 VALUES(?, ?, ?, ?, ?, ?, ?);
 
+lastInsertDonorId:
+SELECT last_insert_rowid();
+
+insertOrReplace:
+INSERT OR REPLACE INTO Donor(
+  lastName,
+  firstName,
+  middleName,
+  branch,
+  aboRh,
+  dob,
+  gender
+)
+VALUES(?, ?, ?, ?, ?, ?, ?);
+
 removeAllDonors:
 DELETE FROM Donor;
 
@@ -21,4 +37,29 @@ FROM Donor;
 
 selectDonorsInfo:
 SELECT * FROM Donor
-WHERE lastName LIKE :lastNameQuery;
+WHERE lastName LIKE ?;
+
+getCount:
+SELECT COUNT(lastName)
+FROM Donor;
+
+CREATE TABLE Product (
+    donorId INTEGER NOT NULL,
+    din TEXT NOT NULL,
+    aboRh TEXT NOT NULL,
+    productCode TEXT NOT NULL,
+    expirationDate TEXT NOT NULL,
+    FOREIGN KEY (donorId) REFERENCES Donor(id) ON DELETE CASCADE
+);
+
+selectAllProductsInfo:
+SELECT Product.*
+FROM Product;
+
+insertProduct:
+INSERT INTO Product(donorId, din, aboRh, productCode, expirationDate)
+VALUES(?, ?, ?, ?, ?);
+
+donorFromNameAndDateWithProducts:
+SELECT * FROM Donor
+WHERE lastName = ? AND dob = ?;

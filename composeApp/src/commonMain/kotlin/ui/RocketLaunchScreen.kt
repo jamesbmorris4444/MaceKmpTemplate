@@ -22,8 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.github.ajalt.colormath.extensions.android.composecolor.toComposeColor
-import com.github.ajalt.colormath.model.RGB
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
@@ -129,7 +127,7 @@ fun RocketLaunchHandler(
     @Composable
     fun LaunchesList(launches: List<RocketLaunch>) {
         LazyColumn {
-            launches.forEachIndexed { index, item ->
+            launches.forEachIndexed { index, _ ->
                 item {
                     LaunchElementText(
                         launches[index].flightNumber.toString(),
@@ -178,32 +176,32 @@ fun LaunchElementText(
     Text(
         modifier = Modifier.testTag("item"),
         text = "flight number: $flightNumber",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
     Text(
         modifier = Modifier.testTag("item"),
         text = "mission name: $missionName",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
     Text(
         modifier = Modifier.testTag("item"),
         text = "details: $details",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
     Text(
         modifier = Modifier.testTag("item"),
         text = "launch date: $launchDate",
-        color = RGB("#000000").toComposeColor(),
+        color = MaterialTheme.colors.onBackground,
         style = MaterialTheme.typography.body1
     )
     Text(
         modifier = Modifier.testTag("item"),
         text = if (launchSuccess) "Successful" else "Failed",
-        color = if (launchSuccess) RGB("#00ff00").toComposeColor() else RGB("#ff0000").toComposeColor(),
+        color = if (launchSuccess) MaterialTheme.colors.secondaryVariant else MaterialTheme.colors.error,
         style = MaterialTheme.typography.body1
     )
-    Divider(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp), color = RGB("#000000").toComposeColor(), thickness = 2.dp)
+    Divider(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp), color = MaterialTheme.colors.onBackground, thickness = 2.dp)
 }

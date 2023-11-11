@@ -4,6 +4,7 @@ import com.jetbrains.handson.kmm.shared.SpaceXSDK
 import com.jetbrains.handson.kmm.shared.cache.Database
 import com.jetbrains.handson.kmm.shared.cache.DatabaseDriverFactory
 import com.jetbrains.handson.kmm.shared.cache.Donor
+import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.CoroutineScope
 
@@ -12,8 +13,8 @@ interface Repository {
 //    fun isAppDatabaseInvalid(): Boolean
 //    fun saveStagingDatabase(databaseName: String, db: File)
     suspend fun refreshDatabase(composableScope: CoroutineScope): Pair<List<RocketLaunch>, String>
-    fun refreshDonors(): List<Donor>
-//    fun insertDonorIntoDatabase(donor: Donor)
+    fun refreshDonors()
+    fun insertDonorIntoDatabase(donor: Donor)
 //    fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>)
 //    fun stagingDatabaseDonorAndProductsList(): List<DonorWithProducts>
 //    fun mainDatabaseDonorAndProductsList(): List<DonorWithProducts>
@@ -21,10 +22,12 @@ interface Repository {
     fun handleSearchClick(searchKey: String) : List<Donor>
 //    fun handleSearchClickWithProducts(searchKey: String) : List<DonorWithProducts>
 //    fun insertReassociatedProductsIntoDatabase(donor: Donor, products: List<Product>)
-//    fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts
+    fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts?
 }
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
+
+    val emptyDonor = Donor(0,"", "", "", "", "", "", false)
 
 //    private lateinit var mainAppDatabase: AppDatabase
 //    private lateinit var stagingAppDatabase: AppDatabase
@@ -53,8 +56,11 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         return Pair(result, message)
     }
 
-    override fun refreshDonors(): List<Donor> {
-        return createListOfDonors()
+    override fun refreshDonors() {
+        Database(databaseDriverFactory).clearDatabase()
+        Database(databaseDriverFactory).createDonor(createListOfDonors())
+        val list = Database(databaseDriverFactory).getAllDonors()
+        Logger.d("JIMX getAllDonorsSize ${list.size}")
     }
 
 //    private fun createListOfProducts(donors: Int): List<Product> {
@@ -93,6 +99,50 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //                jsonSubArray.put(jsonObject)
 //            }
 //
+//        }
+//        return jsonTopArray
+//    }
+
+//    private fun createListOfProducts(donors: Int) : List<Product> {
+//        val random = Random()
+//        val jsonTopArray = JSONArray()
+//        for (index in 0 until donors) {
+//            val productCount = random.nextInt(4)
+//            val din = random.nextInt(1000).toString()
+//            val aboRh: String  = when (index) {
+//                0 -> { "O-Positive" }
+//                1 -> { "O-Negative" }
+//                2 -> { "A-Positive" }
+//                3 -> { "A-Negative" }
+//                4 -> { "B-Positive" }
+//                5 -> { "B-Negative" }
+//                6 -> { "AB-Positive" }
+//                7 -> { "AB-Negative" }
+//                8 -> { "O-Positive" }
+//                9 -> { "O-Negative" }
+//                10 -> { "A-Positive" }
+//                11 -> { "A-Negative" }
+//                12 -> { "B-Positive" }
+//                13 -> { "B-Negative" }
+//                14 -> { "AB-Positive" }
+//                15 -> { "AB-Negative" }
+//                16 -> { "O-Positive" }
+//                17 -> { "O-Negative" }
+//                18 -> { "A-Positive" }
+//                19 -> { "A-Negative" }
+//                else -> { "" }
+//            }
+//            val productCode = (random.nextInt(10000) + 9990000).toString()
+//            val jsonSubArray = JSONArray()
+//            for (productIndex in 0 until productCount) {
+//                val jsonObject = JSONObject()
+//                jsonObject.put("din", din)
+//                jsonObject.put("abo_rh", aboRh)
+//                jsonObject.put("product_code", productCode)
+//                jsonObject.put("expiration_date", "01 Jan 2020")
+//                jsonSubArray.put(jsonObject)
+//            }
+//            jsonTopArray.put(jsonSubArray)
 //        }
 //        return jsonTopArray
 //    }
@@ -238,7 +288,7 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
                 19 -> { "The JCS" }
                 else -> { "" }
             }
-            donorList.add(Donor(lastName = lastName, middleName = middleName, firstName = firstName, aboRh = aboRh, dob = dob, branch = branch, gender = true))
+            donorList.add(Donor(id = 1L, lastName = lastName, middleName = middleName, firstName = firstName, aboRh = aboRh, dob = dob, branch = branch, gender = true))
         }
         return donorList
     }
@@ -290,9 +340,9 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //     *   donorsFromFullNameWithProducts
 //     */
 //
-//    override fun insertDonorIntoDatabase(donor: Donor) {
-//        stagingAppDatabase.databaseDao().insertDonor(donor)
-//    }
+    override fun insertDonorIntoDatabase(donor: Donor) {
+        Database(databaseDriverFactory).insertOrReplaceDonor(donor)
+    }
 //
 //    override fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
 //        stagingAppDatabase.databaseDao().insertDonorAndProducts(donor, products)
@@ -306,9 +356,9 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //        return stagingAppDatabase.databaseDao().loadAllDonorsWithProducts()
 //    }
 //
-//    override fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts {
-//        return stagingAppDatabase.databaseDao().donorFromNameAndDateWithProducts(donor.lastName, donor.dob)
-//    }
+    override fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts? {
+        return Database(databaseDriverFactory).donorFromNameAndDateWithProducts(donor.lastName, donor.dob)
+    }
 //
 //    override fun mainDatabaseDonorAndProductsList(): List<DonorWithProducts> {
 //        return mainAppDatabase.databaseDao().loadAllDonorsWithProducts()
