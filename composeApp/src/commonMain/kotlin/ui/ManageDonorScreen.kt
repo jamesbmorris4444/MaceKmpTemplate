@@ -57,6 +57,7 @@ fun ManageDonorScreen(
     navigateUp: () -> Unit,
     openDrawer: () -> Unit,
     donor: Donor,
+    title: String,
     viewModel: BloodViewModel,
     transitionToCreateProductsScreen: Boolean,
     donateProductsSearchStringName: String,
@@ -68,7 +69,7 @@ fun ManageDonorScreen(
     LaunchedEffect(key1 = true) {
         configAppBar(
             AppBarState(
-                title = ScreenNames.ManageDonorAfterSearch.name,
+                title = title,
                 actions = {
                     IconButton(onClick = openDrawer) {
                         Icon(

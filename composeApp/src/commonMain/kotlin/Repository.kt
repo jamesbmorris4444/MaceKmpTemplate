@@ -27,7 +27,9 @@ interface Repository {
 //    fun insertReassociatedProductsIntoDatabase(donor: Donor, products: List<Product>)
     fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts?
     fun updateProductInReassociate(newValue: Boolean, id: Long)
-    fun updateProductRemovedForReassociation(newValue: Boolean, id: Long)fun updateDonorInReassociate(newValue: Boolean, id: Long)
+    fun updateProductRemovedForReassociation(newValue: Boolean, id: Long)
+    fun updateDonorInReassociate(newValue: Boolean, id: Long)
+    fun updateDonorIdInProduct(newValue: Long, id: Long)
 }
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
@@ -54,10 +56,10 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         var message = ""
         try {
             result = sdk.getLaunches(true)
-            Logger.d("JIMX refreshDatabase success: ${result.size}")
+            Logger.d("MACELOG: refreshDatabase success: ${result.size}")
         } catch (e: Exception) {
             message = e.message ?: "NULL message"
-            Logger.e("JIMX refreshDatabase failure: ${e.message}")
+            Logger.e("MACELOG: refreshDatabase failure: ${e.message}")
         }
         return Pair(result, message)
     }
@@ -66,7 +68,7 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         Database(databaseDriverFactory).clearDatabase()
         Database(databaseDriverFactory).createDonor(createListOfDonors())
         val list = Database(databaseDriverFactory).getAllDonors()
-        Logger.d("JIMX getAllDonorsSize ${list.size}")
+        Logger.d("MACELOG: number of donors=${list.size}")
     }
 
 //    private fun createListOfProducts(donors: Int): List<Product> {
@@ -420,6 +422,10 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 
     override fun updateDonorInReassociate(newValue: Boolean, id: Long) {
         Database(databaseDriverFactory).updateDonorInReassociate(newValue = newValue, id = id)
+    }
+
+    override fun updateDonorIdInProduct(newValue: Long, id: Long) {
+        Database(databaseDriverFactory).updateDonorIdInProduct(newValue = newValue, id = id)
     }
 //
 //    override fun donorsFromFullNameWithProducts(searchLast: String, dob: String): List<DonorWithProducts> {

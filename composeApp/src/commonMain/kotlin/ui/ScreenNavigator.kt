@@ -50,6 +50,7 @@ fun ScreenNavigator(
     repository: Repository,
     openDrawer: () -> Unit = { }
 ) {
+    Logger.d("JIMX   BBBBB=$initialRoute")
     var appBarState by remember { mutableStateOf(AppBarState()) }
     var donor by remember { mutableStateOf(viewModel.emptyDonor) }
     var transitionToCreateProductsScreen by remember { mutableStateOf(true) }
@@ -68,21 +69,21 @@ fun ScreenNavigator(
                     route = ScreenNames.RocketLaunch.name,
                     navTransition = NavTransition(),
                 ) {
-                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.RocketLaunch.name}")
+                    Logger.d("MACELOG: ScreenNavigator: launch screen=${ScreenNames.RocketLaunch.name}")
                     RocketLaunchScreen(
                         repository = repository,
                         configAppBar = {
                             appBarState = it
                         },
                         viewModel = viewModel,
-                        title = Strings.get("rocket_launch_complete_title")
+                        title = ScreenNames.RocketLaunch.string
                     )
                 }
                 scene(
                     route = ScreenNames.DonateProductsSearch.name,
                     navTransition = NavTransition(),
                 ) {
-                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.DonateProductsSearch.name}")
+                    Logger.d("MACELOG: ScreenNavigator: launch screen=${ScreenNames.DonateProductsSearch.name}")
                     DonateProductsScreen(
                         repository = repository,
                         configAppBar = {
@@ -97,20 +98,21 @@ fun ScreenNavigator(
                             navigator.navigate(ScreenNames.ManageDonorAfterSearch.name)
                         },
                         viewModel = viewModel,
-                        title = Strings.get("donate_products_search_screen_name")
+                        title = ScreenNames.DonateProductsSearch.string
                     )
                 }
                 scene(
                     route = ScreenNames.ManageDonorAfterSearch.name,
                     navTransition = NavTransition(),
                 ) {
-                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.ManageDonorAfterSearch.name}")
+                    Logger.d("MACELOG: ScreenNavigator: launch screen=${ScreenNames.ManageDonorAfterSearch.name}")
                     ManageDonorScreen(
                         repository = repository,
                         navigator = navigator,
                         configAppBar = {
                             appBarState = it
                         },
+                        title = ScreenNames.ManageDonorAfterSearch.string,
                         canNavigateBack =  navigator.canGoBack.collectAsState(true).value,
                         navigateUp = { navigator.popBackStack() },
                         openDrawer = openDrawer,
@@ -125,11 +127,11 @@ fun ScreenNavigator(
                     route = ScreenNames.CreateProducts.name,
                     navTransition = NavTransition(),
                 ) {
-                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.CreateProducts.name}")
+                    Logger.d("MACELOG: ScreenNavigator: launch screen=${ScreenNames.CreateProducts.name}")
                     CreateProductsScreen(
                         repository = repository,
                         navigator = navigator,
-                        title = ScreenNames.CreateProducts.name,
+                        title = ScreenNames.CreateProducts.string,
                         configAppBar = {
                             appBarState = it
                         },
@@ -170,7 +172,7 @@ enum class ScreenNames(val inDrawer: Boolean, val string: String) {
     DonateProductsSearch(false, Strings.get("donate_products_search_screen_name")),
     CreateProducts(false, Strings.get("create_blood_product_title")),
     ManageDonorAfterSearch(false, Strings.get("manage_donor_after_search_title")),
-//    ManageDonorFromDrawer(true, R.string.manage_donor_from_drawer_title),
-//    ReassociateDonation(true, R.string.reassociate_donation_title),
-//    ViewDonorList(true, R.string.view_donor_list_title)
+    ManageDonorFromDrawer(true, Strings.get("manage_donor_from_drawer_title")),
+    ReassociateDonation(true,Strings.get("reassociate_donation_title")),
+    ViewDonorList(true, Strings.get("view_donor_list_title"))
 }

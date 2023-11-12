@@ -1,6 +1,7 @@
 package ui
 import BloodViewModel
 import Repository
+import Strings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,7 +27,9 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
+import extraBlack
+import extraMagenta
+import extraWhite
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.Navigator
@@ -53,7 +56,7 @@ fun DrawerAppComponent(
         Column(
             modifier = Modifier
                 .padding(top = 100.dp)
-                .background(color = MaterialTheme.colors.background),
+                .background(color = MaterialTheme.colors.extraBlack),
             horizontalAlignment = Alignment.Start
         ) {
             Box(
@@ -61,18 +64,19 @@ fun DrawerAppComponent(
                     .align(CenterHorizontally)
             ) {
                 Image(
-                    painter = painterResource("drawable/fs_logo.png"),
-                    contentDescription = "",
-                    contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(120.dp),
+                    painter = painterResource("drawable/fs_logo.png"),
+                    contentDescription = Strings.get("fs_logo_content_description"),
+                    contentScale = ContentScale.Fit
                 )
                 Text(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter),
-                    text = "",
+                        .align(Alignment.BottomCenter)
+                        .padding(top = 110.dp),
+                    text = Strings.get("walking_blood_bank_text"),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onBackground
+                    color =  MaterialTheme.colors.extraWhite
                 )
             }
             Spacer(Modifier.height(24.dp))
@@ -82,29 +86,29 @@ fun DrawerAppComponent(
                         Modifier.clickable(onClick = {
                             closeDrawer()
                             currentScreen.value = screen
-                            Logger.d("click=${screen.string}")
-                            navigator.navigate(screen.string)
-                        })
-                    ) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            color = if (currentScreen.value == screen) {
-                                MaterialTheme.colors.onSurface
-                            } else {
-                                MaterialTheme.colors.surface
-                            }
-                        ) {
-                            Text(
-                                text = screen.string,
-                                modifier = Modifier.padding(16.dp),
+                            navigator.navigate(route = screen.name)
+                        }),
+                        content = {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
                                 color = if (currentScreen.value == screen) {
-                                    MaterialTheme.colors.onBackground
+                                    MaterialTheme.colors.extraWhite
                                 } else {
-                                    MaterialTheme.colors.background
+                                    MaterialTheme.colors.extraMagenta
                                 }
-                            )
+                            ) {
+                                Text(
+                                    text = screen.string,
+                                    modifier = Modifier.padding(16.dp),
+                                    color = if (currentScreen.value == screen) {
+                                        MaterialTheme.colors.extraBlack
+                                    } else {
+                                        MaterialTheme.colors.extraWhite
+                                    }
+                                )
+                            }
                         }
-                    }
+                    )
                 }
             }
         }

@@ -55,6 +55,9 @@ insertProduct:
 INSERT INTO Product(id, donorId, din, aboRh, productCode, expirationDate, removedForReassociation, inReassociate)
 VALUES(?, ?, ?, ?, ?, ?, 0, 0);
 
+updateDonorIdInProduct:
+UPDATE Product SET donorId = :newValue WHERE id = :id;
+
 updateProductRemovedForReassociation:
 UPDATE Product SET removedForReassociation = :newValue WHERE id = :id;
 

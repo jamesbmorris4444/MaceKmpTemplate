@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.jetbrains.handson.kmm.shared.cache.Donor
 import com.jetbrains.handson.kmm.shared.cache.Product
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
@@ -92,10 +93,11 @@ fun CreateProductsScreen(
         viewModel.changeProductsListState(productList)
     }
 
-    fun addDonorWithProductsToModifiedDatabase() {
-//        products.map { product ->
-//            product.donorId = donor.id
-//        }
+    fun addDonorWithProductsToDatabase() {
+        Logger.d("JIMX     $$$$$$$1")
+        products.map { product ->
+            repository.updateDonorIdInProduct(donor.id, product.id)
+        }
         repository.insertDonorAndProductsIntoDatabase(donor, products)
         viewModel.changeShowStandardModalState(
             StandardModalArgs(
@@ -159,7 +161,7 @@ fun CreateProductsScreen(
                         DismissSelector.POSITIVE -> {
                             processNewProduct()
                             if (products.isNotEmpty()) {
-                                addDonorWithProductsToModifiedDatabase()
+                                addDonorWithProductsToDatabase()
                             }
                             onCompleteButtonClicked()
                         }
@@ -170,7 +172,7 @@ fun CreateProductsScreen(
             )
         } else {
             if (products.isNotEmpty()) {
-                addDonorWithProductsToModifiedDatabase()
+                addDonorWithProductsToDatabase()
             }
             onCompleteButtonClicked()
         }
@@ -213,7 +215,9 @@ fun CreateProductsScreen(
             Text (
                 modifier = Modifier
                     .padding(PaddingValues(start = leftGridPadding)),
-                text = Strings.format(Strings.get("create_products_header_text"), donor.lastName, donor.firstName)
+                text = Strings.format(Strings.format("create_products_header_text", donor.lastName, donor.firstName)),
+                style = MaterialTheme.typography.body1,
+                fontFamily = avenirFontFamilyBold
             )
         }
         LazyVerticalGrid(
@@ -252,7 +256,10 @@ fun CreateProductsScreen(
                                 modifier = Modifier
                                     .padding(PaddingValues(start = 8.dp))
                                     .align(Alignment.TopStart),
-                                text = dinTitle
+                                text = dinTitle,
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = avenirFontFamilyBold
+
                             )
                         }
                     }
@@ -281,7 +288,9 @@ fun CreateProductsScreen(
                                 modifier = Modifier
                                     .padding(PaddingValues(start = 8.dp))
                                     .align(Alignment.TopStart),
-                                text = productCodeTitle
+                                text = productCodeTitle,
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = avenirFontFamilyBold
                             )
                         }
                     }
@@ -310,13 +319,17 @@ fun CreateProductsScreen(
                                 modifier = Modifier
                                     .padding(PaddingValues(start = 8.dp))
                                     .align(Alignment.TopStart),
-                                text = aboRhTitle
+                                text = aboRhTitle,
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = avenirFontFamilyBold
                             )
                             Text(
                                 modifier = Modifier
                                     .padding(PaddingValues(bottom = 32.dp))
                                     .align(Alignment.BottomCenter),
-                                text = donor.aboRh
+                                text = donor.aboRh,
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = avenirFontFamilyBold
                             )
                         }
                     }
@@ -345,7 +358,9 @@ fun CreateProductsScreen(
                                 modifier = Modifier
                                     .padding(PaddingValues(start = 8.dp))
                                     .align(Alignment.TopStart),
-                                text = expirationTitle
+                                text = expirationTitle,
+                                style = MaterialTheme.typography.body1,
+                                fontFamily = avenirFontFamilyBold
                             )
                         }
                     }

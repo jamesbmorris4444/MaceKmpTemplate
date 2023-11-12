@@ -18,11 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
+import extraBlue
+import extraGreen
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 
@@ -37,13 +38,13 @@ fun RocketLaunchScreen(
     @Composable
     fun CustomCircularProgressBar() {
         CircularProgressIndicator(
-            modifier = Modifier.size(120.dp),
-            color = Color.Green,
+            modifier = Modifier.size(60.dp),
+            color = MaterialTheme.colors.extraBlue,
             strokeWidth = 6.dp
         )
     }
 
-    Logger.d("JIMX Compose: ${ScreenNames.RocketLaunch.name}")
+    Logger.d("MACELOG: Compose: ${ScreenNames.RocketLaunch.name}")
 //    viewModel.setAppDatabase()
 //    val showStandardModalState = viewModel.showStandardModalState.observeAsState().value ?: StandardModalArgs()
     val composableScope = rememberCoroutineScope()
@@ -200,7 +201,7 @@ fun LaunchElementText(
     Text(
         modifier = Modifier.testTag("item"),
         text = if (launchSuccess) "Successful" else "Failed",
-        color = if (launchSuccess) MaterialTheme.colors.secondaryVariant else MaterialTheme.colors.error,
+        color = if (launchSuccess) MaterialTheme.colors.extraGreen else MaterialTheme.colors.error,
         style = MaterialTheme.typography.body1
     )
     Divider(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp), color = MaterialTheme.colors.onBackground, thickness = 2.dp)

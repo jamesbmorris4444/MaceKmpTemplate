@@ -125,7 +125,6 @@ fun DonateProductsHandler(
     onItemButtonClicked: (donor: Donor) -> Unit
 ) {
     val foundDonors = viewModel.donorsAvailableState.collectAsStateWithLifecycle().value
-    Logger.d("JIMX getDonors $foundDonors")
     fun handleSearchClick(searchKey: String) {
         viewModel.updateDonorsAvailableState(repository.handleSearchClick(searchKey))
     }
@@ -158,7 +157,6 @@ fun DonateProductsHandler(
     Logger.d("launch DonateProductsScreen=$title    donors=$foundDonors")
 
     LaunchedEffect(key1 = true) {
-        Logger.d("JIMX CAN GO BACK AAA=$canNavigateBack")
         configAppBar(
             AppBarState(
                 title = title,
@@ -171,7 +169,6 @@ fun DonateProductsHandler(
                     }
                 },
                 navigationIcon = {
-                    Logger.d("JIMX CAN GO BACK BBB=$canNavigateBack")
                     if (canNavigateBack) {
                         IconButton(onClick = navigateUp.also {  }) {
                             Icon(
