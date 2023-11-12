@@ -13,7 +13,8 @@ actual abstract class ViewModel actual constructor() : KoinComponent {
 
     actual fun onCleared() {}
 
-    actual val emptyDonor = Donor(0,"", "", "", "", "", "", false)
+    actual val emptyDonor = Donor(0,"", "", "", "", "", "", false, false)
+    actual val emptyProduct = Product(0,"", "", "", "", false, false)
 
     internal actual val privateRefreshCompletedState: MutableStateFlow<Boolean> = MutableStateFlow(true)
     actual val refreshCompletedState: MutableStateFlow<Boolean>

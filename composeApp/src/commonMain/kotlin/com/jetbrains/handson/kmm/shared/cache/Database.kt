@@ -26,7 +26,8 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         branch: String,
         aboRh: String,
         dob: String,
-        gender: Boolean
+        gender: Boolean,
+        inReassociate: Boolean
     ): Donor {
         return Donor(
             id = id,
@@ -36,7 +37,8 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
             branch = branch,
             aboRh = aboRh,
             dob = dob,
-            gender = gender
+            gender = gender,
+            inReassociate = inReassociate
         )
     }
 
@@ -50,7 +52,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    fun insertDonor(donor: Donor) {
+    internal fun insertDonor(donor: Donor) {
         dbQuery.insertDonor(
             id = null,
             lastName = donor.lastName,
@@ -67,11 +69,11 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         return dbQuery.selectDonorsInfo("$lastName%").executeAsList()
     }
 
-    internal fun lastInsertDonorId(): Long {
+    private fun lastInsertDonorId(): Long {
         return dbQuery.lastInsertDonorId().executeAsOne()
     }
 
-    internal fun createProduct(products: List<Product>) {
+    private fun createProduct(products: List<Product>) {
         dbQuery.transaction {
             products.forEach { product ->
                 insertProduct(product)
@@ -81,6 +83,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
 
     private fun insertProduct(product: Product) {
         dbQuery.insertProduct(
+            id = null,
             donorId = 0L,
             din = product.din,
             aboRh = product.aboRh,
@@ -94,18 +97,24 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
     }
 
     private fun mapProductSelecting(
+        id: Long,
         donorId: Long,
         din: String,
         aboRh: String,
         productCode: String,
-        expirationDate: String
+        expirationDate: String,
+        removedForReassociation: Boolean,
+        inReassociate: Boolean
     ): Product {
         return Product(
+            id = id,
             donorId = donorId,
             din = din,
             aboRh = aboRh,
             productCode = productCode,
-            expirationDate = expirationDate
+            expirationDate = expirationDate,
+            removedForReassociation = removedForReassociation,
+            inReassociate = inReassociate
         )
     }
 
@@ -120,6 +129,23 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         } else {
             null
         }
+    }
+
+    internal fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
+        insertDonor(donor)
+        createProduct(products)
+    }
+
+    internal fun updateProductInReassociate(newValue: Boolean, id: Long) {
+        dbQuery.updateProductInReassociate(newValue, id)
+    }
+
+    internal fun updateProductRemovedForReassociation(newValue: Boolean, id: Long) {
+        dbQuery.updateProductRemovedForReassociation(newValue, id)
+    }
+
+    internal fun updateDonorInReassociate(newValue: Boolean, id: Long) {
+        dbQuery.updateDonorInReassociate(newValue, id)
     }
 
 

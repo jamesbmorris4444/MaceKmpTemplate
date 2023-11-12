@@ -1,9 +1,9 @@
 package com.mace.kmptemplate
 
 import BloodViewModel
-import ui.DrawerAppComponent
 import RepositoryImpl
 import Strings
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +12,7 @@ import androidx.core.view.WindowCompat
 import com.jetbrains.handson.kmm.shared.SpaceXSDK
 import com.jetbrains.handson.kmm.shared.cache.DatabaseDriverFactory
 import com.mace.mace_template.ui.theme.MaceTemplateTheme
+import ui.DrawerAppComponent
 
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +23,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel: BloodViewModel by viewModels()
         Strings.context = this
+        repository.screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        repository.screenHeight = Resources.getSystem().displayMetrics.heightPixels
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
             MaceTemplateTheme {

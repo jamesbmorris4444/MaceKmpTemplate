@@ -1,5 +1,6 @@
 package ui
 import BloodViewModel
+import CreateProductsScreen
 import Repository
 import Strings
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import co.touchlab.kermit.Logger
 import moe.tlaster.precompose.navigation.NavHost
+import moe.tlaster.precompose.navigation.NavOptions
 import moe.tlaster.precompose.navigation.Navigator
+import moe.tlaster.precompose.navigation.PopUpTo
 import moe.tlaster.precompose.navigation.transition.NavTransition
 
 data class AppBarState(
@@ -118,28 +121,28 @@ fun ScreenNavigator(
                         createProductsStringName = ScreenNames.CreateProducts.name
                     )
                 }
-//                scene(
-//                    route = ScreenNames.CreateProducts.name,
-//                    navTransition = NavTransition(),
-//                ) {
-//                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.CreateProducts.name}")
-//                    CreateProductsScreen(
-//                        repository = repository,
-//                        navigator = navigator,
-//                        configAppBar = {
-//                            appBarState = it
-//                        },
-//                        canNavigateBack = navigator.canGoBack.collectAsState(true).value,
-//                        navigateUp = { navigator.popBackStack() },
-//                        openDrawer = openDrawer,
-//                        donor = donor,
-//                        viewModel = viewModel,
-//                        onCompleteButtonClicked = {
-//                            navController.popBackStack(route = createProductsStringName, inclusive = true)
-//                            navController.navigate(donateProductsSearchStringName)
-//                        }
-//                    )
-//                }
+                scene(
+                    route = ScreenNames.CreateProducts.name,
+                    navTransition = NavTransition(),
+                ) {
+                    Logger.d("JIMX ScreenNavigator: launch screen=${ScreenNames.CreateProducts.name}")
+                    CreateProductsScreen(
+                        repository = repository,
+                        navigator = navigator,
+                        title = ScreenNames.CreateProducts.name,
+                        configAppBar = {
+                            appBarState = it
+                        },
+                        canNavigateBack = navigator.canGoBack.collectAsState(true).value,
+                        navigateUp = { navigator.popBackStack() },
+                        openDrawer = openDrawer,
+                        donor = donor,
+                        viewModel = viewModel,
+                        onCompleteButtonClicked = {
+                            navigator.navigate(route = ScreenNames.DonateProductsSearch.name, NavOptions(popUpTo = PopUpTo(ScreenNames.DonateProductsSearch.name, inclusive = true)))
+                        }
+                    )
+                }
             }
         }
     }

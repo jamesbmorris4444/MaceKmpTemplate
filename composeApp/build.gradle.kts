@@ -71,6 +71,7 @@ kotlin {
                 implementation(libs.colormath.compose)
                 implementation(libs.moko.resources)
                 implementation(libs.moko.resources.compose)
+                implementation(libs.kmm.viewmodel)
             }
         }
         val iosArm64Main by getting

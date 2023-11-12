@@ -8,6 +8,7 @@ import ui.StandardModalArgs
 expect abstract class ViewModel() {
     protected fun onCleared()
     val emptyDonor: Donor
+    val emptyProduct: Product
     internal val privateRefreshCompletedState: MutableStateFlow<Boolean>
     val refreshCompletedState: MutableStateFlow<Boolean>
     internal val privateDatabaseInvalidState: MutableStateFlow<Boolean>

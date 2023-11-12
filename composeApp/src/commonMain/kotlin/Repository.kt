@@ -4,6 +4,7 @@ import com.jetbrains.handson.kmm.shared.SpaceXSDK
 import com.jetbrains.handson.kmm.shared.cache.Database
 import com.jetbrains.handson.kmm.shared.cache.DatabaseDriverFactory
 import com.jetbrains.handson.kmm.shared.cache.Donor
+import com.jetbrains.handson.kmm.shared.cache.Product
 import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.CoroutineScope
@@ -12,17 +13,21 @@ interface Repository {
 //    fun setAppDatabase(app: Application)
 //    fun isAppDatabaseInvalid(): Boolean
 //    fun saveStagingDatabase(databaseName: String, db: File)
+    var screenWidth: Int
+    var screenHeight: Int
     suspend fun refreshDatabase(composableScope: CoroutineScope): Pair<List<RocketLaunch>, String>
     fun refreshDonors()
     fun insertDonorIntoDatabase(donor: Donor)
-//    fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>)
+    fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>)
 //    fun stagingDatabaseDonorAndProductsList(): List<DonorWithProducts>
 //    fun mainDatabaseDonorAndProductsList(): List<DonorWithProducts>
-//    fun donorsFromFullNameWithProducts(searchLast: String, dob: String): List<DonorWithProducts>
+    fun donorsFromFullNameWithProducts(searchLast: String, dob: String): DonorWithProducts?
     fun handleSearchClick(searchKey: String) : List<Donor>
 //    fun handleSearchClickWithProducts(searchKey: String) : List<DonorWithProducts>
 //    fun insertReassociatedProductsIntoDatabase(donor: Donor, products: List<Product>)
     fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts?
+    fun updateProductInReassociate(newValue: Boolean, id: Long)
+    fun updateProductRemovedForReassociation(newValue: Boolean, id: Long)fun updateDonorInReassociate(newValue: Boolean, id: Long)
 }
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
@@ -40,6 +45,9 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //    override fun isAppDatabaseInvalid(): Boolean {
 //        return databaseDonorCount(mainAppDatabase) == 0
 //    }
+
+    override var screenWidth = 0
+    override var screenHeight = 0
 
     override suspend fun refreshDatabase(composableScope: CoroutineScope): Pair<List<RocketLaunch>, String> {
         var result: List<RocketLaunch> = listOf()
@@ -286,7 +294,7 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
                 19 -> { "The JCS" }
                 else -> { "" }
             }
-            donorList.add(Donor(id = 1L, lastName = lastName, middleName = middleName, firstName = firstName, aboRh = aboRh, dob = dob, branch = branch, gender = true))
+            donorList.add(Donor(id = 1L, lastName = lastName, middleName = middleName, firstName = firstName, aboRh = aboRh, dob = dob, branch = branch, gender = true, inReassociate = false))
         }
         return donorList
     }
@@ -342,9 +350,9 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         Database(databaseDriverFactory).insertDonor(donor)
     }
 //
-//    override fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
-//        stagingAppDatabase.databaseDao().insertDonorAndProducts(donor, products)
-//    }
+    override fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
+        Database(databaseDriverFactory).insertDonorAndProductsIntoDatabase(donor, products)
+    }
 //
 //    override fun insertReassociatedProductsIntoDatabase(donor: Donor, products: List<Product>) {
 //        stagingAppDatabase.databaseDao().insertDonorAndProducts(donor, products)
@@ -398,20 +406,21 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //        return newList
 //    }
 //
-//    private fun donorsFromFullNameWithProducts(database: AppDatabase, search: String): List<DonorWithProducts> {
-//        val searchLast: String
-//        var searchFirst = "%"
-//        val index = search.indexOf(',')
-//        if (index < 0) {
-//            searchLast = "$search%"
-//        } else {
-//            val last = search.substring(0, index)
-//            val first = search.substring(index + 1)
-//            searchFirst = "$first%"
-//            searchLast = "$last%"
-//        }
-//        return database.databaseDao().donorsFromFullNameWithProducts(searchLast, searchFirst)
-//    }
+    override fun donorsFromFullNameWithProducts(lastName: String, dob: String): DonorWithProducts? {
+        return Database(databaseDriverFactory).donorFromNameAndDateWithProducts(lastName, dob)
+    }
+
+    override fun updateProductInReassociate(newValue: Boolean, id: Long) {
+        Database(databaseDriverFactory).updateProductInReassociate(newValue = newValue, id = id)
+    }
+
+    override fun updateProductRemovedForReassociation(newValue: Boolean, id: Long) {
+        Database(databaseDriverFactory).updateProductRemovedForReassociation(newValue = newValue, id = id)
+    }
+
+    override fun updateDonorInReassociate(newValue: Boolean, id: Long) {
+        Database(databaseDriverFactory).updateDonorInReassociate(newValue = newValue, id = id)
+    }
 //
 //    override fun donorsFromFullNameWithProducts(searchLast: String, dob: String): List<DonorWithProducts> {
 //        return stagingAppDatabase.databaseDao().donorsFromFullNameWithProducts(searchLast, dob)

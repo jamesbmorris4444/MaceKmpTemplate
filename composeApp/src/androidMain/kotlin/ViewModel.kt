@@ -1,13 +1,15 @@
+
 import com.jetbrains.handson.kmm.shared.cache.Donor
 import com.jetbrains.handson.kmm.shared.cache.Product
 import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
+import com.rickclephas.kmm.viewmodel.KMMViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ui.StandardModalArgs
 
-actual abstract class ViewModel : androidx.lifecycle.ViewModel(), KoinComponent {
+actual abstract class ViewModel : KMMViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
 
@@ -15,7 +17,8 @@ actual abstract class ViewModel : androidx.lifecycle.ViewModel(), KoinComponent 
         super.onCleared()
     }
 
-    actual val emptyDonor = Donor(0,"", "", "", "", "", "", false)
+    actual val emptyDonor = Donor(0,"", "", "", "", "", "", false, false)
+    actual val emptyProduct = Product(0, 0,"", "", "", "", false, false)
 
     internal actual val privateRefreshCompletedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     actual val refreshCompletedState: MutableStateFlow<Boolean>
