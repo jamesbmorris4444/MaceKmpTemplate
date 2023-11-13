@@ -3,6 +3,7 @@ import BloodViewModel
 import CreateProductsScreen
 import Repository
 import Strings
+import ViewDonorListScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -50,7 +51,6 @@ fun ScreenNavigator(
     repository: Repository,
     openDrawer: () -> Unit = { }
 ) {
-    Logger.d("JIMX   BBBBB=$initialRoute")
     var appBarState by remember { mutableStateOf(AppBarState()) }
     var donor by remember { mutableStateOf(viewModel.emptyDonor) }
     var transitionToCreateProductsScreen by remember { mutableStateOf(true) }
@@ -145,6 +145,34 @@ fun ScreenNavigator(
                         }
                     )
                 }
+                scene(
+                    route = ScreenNames.ViewDonorList.name,
+                    navTransition = NavTransition(),
+                ) {
+                    Logger.d("MACELOG: ScreenNavigator: launch screen=${ScreenNames.ViewDonorList.name}")
+                    ViewDonorListScreen(
+                        repository = repository,
+                        title = ScreenNames.CreateProducts.string,
+                        configAppBar = {
+                            appBarState = it
+                        },
+                        canNavigateBack = navigator.canGoBack.collectAsState(true).value,
+                        navigateUp = { navigator.popBackStack() },
+                        openDrawer = openDrawer
+                    )
+                }
+                //composable(route = viewDonorListStringName) {
+                //                    LogUtils.D(LOG_TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.TMP), "ScreenNavigator: launch screen=$viewDonorListStringName")
+                //                    ViewDonorListScreen(
+                //                        onComposing = {
+                //                            appBarState = it
+                //                        },
+                //                        canNavigateBack = navController.previousBackStackEntry != null,
+                //                        navigateUp = { navController.navigateUp() },
+                //                        openDrawer = openDrawer,
+                //                        viewModel = viewModel
+                //                    )
+                //                }
             }
         }
     }

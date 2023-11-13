@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
 import com.jetbrains.handson.kmm.shared.cache.Donor
 import com.jetbrains.handson.kmm.shared.cache.Product
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
@@ -94,11 +93,7 @@ fun CreateProductsScreen(
     }
 
     fun addDonorWithProductsToDatabase() {
-        Logger.d("JIMX     $$$$$$$1")
-        products.map { product ->
-            repository.updateDonorIdInProduct(donor.id, product.id)
-        }
-        repository.insertDonorAndProductsIntoDatabase(donor, products)
+        repository.insertProductsIntoDatabase(products)
         viewModel.changeShowStandardModalState(
             StandardModalArgs(
                 topIconId = "drawable/notification.xml",

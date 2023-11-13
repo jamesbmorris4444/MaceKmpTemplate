@@ -6,7 +6,6 @@ import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
     private val database = AppDatabase(databaseDriverFactory.createDriver())
     private val dbQuery = database.appDatabaseQueries
-    private val donorIdMap: HashMap<String, Long> = hashMapOf()
 
     internal fun clearDatabase() {
         dbQuery.transaction {
@@ -46,7 +45,6 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         dbQuery.transaction {
             donors.forEach { donor ->
                 insertDonor(donor)
-                donorIdMap["${donor.lastName},${donor.dob}"] = lastInsertDonorId()
             }
         }
         //dumpDonorsAndProducts()
@@ -79,13 +77,12 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
                 insertProduct(product)
             }
         }
-        dumpDonorsAndProducts()
     }
 
     private fun insertProduct(product: Product) {
         dbQuery.insertProduct(
             id = null,
-            donorId = 0L,
+            donorId = product.donorId,
             din = product.din,
             aboRh = product.aboRh,
             productCode = product.productCode,
@@ -131,10 +128,8 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    internal fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
+    internal fun insertProductsIntoDatabase(products: List<Product>) {
         createProduct(products)
-        Logger.d("JIMX     $$$$$$$2")
-        dumpDonorsAndProducts()
     }
 
     internal fun updateProductInReassociate(newValue: Boolean, id: Long) {
@@ -153,10 +148,14 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         dbQuery.updateDonorIdInProduct(newValue, id)
     }
 
+    internal fun selectProductsList(donorId: Long): List<Product> {
+        return dbQuery.selectProductsList(donorId).executeAsList()
+    }
+
     private fun dumpDonorsAndProducts() {
         val result1 = getAllDonors()
         result1.forEach {
-            Logger.d("MACELOG: DUMP DONORS    Donor=$it")
+            Logger.d("MACELOG: DUMP DONORS      Donor=$it")
         }
         val result2 = getAllProducts()
         result2.forEach {

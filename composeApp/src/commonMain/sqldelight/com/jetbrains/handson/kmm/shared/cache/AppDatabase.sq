@@ -67,3 +67,7 @@ UPDATE Product SET inReassociate = :newValue WHERE id = :id;
 donorFromNameAndDateWithProducts:
 SELECT * FROM Donor
 WHERE lastName = ? AND dob = ?;
+
+selectProductsList:
+SELECT Product.*
+FROM Product WHERE donorId = :donorId;

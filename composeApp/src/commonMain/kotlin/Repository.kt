@@ -10,17 +10,13 @@ import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
 import kotlinx.coroutines.CoroutineScope
 
 interface Repository {
-//    fun setAppDatabase(app: Application)
-//    fun isAppDatabaseInvalid(): Boolean
-//    fun saveStagingDatabase(databaseName: String, db: File)
     var screenWidth: Int
     var screenHeight: Int
     suspend fun refreshDatabase(composableScope: CoroutineScope): Pair<List<RocketLaunch>, String>
     fun refreshDonors()
     fun insertDonorIntoDatabase(donor: Donor)
-    fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>)
-//    fun stagingDatabaseDonorAndProductsList(): List<DonorWithProducts>
-//    fun mainDatabaseDonorAndProductsList(): List<DonorWithProducts>
+    fun insertProductsIntoDatabase(products: List<Product>)
+    fun donorAndProductsList(): List<DonorWithProducts>
     fun donorsFromFullNameWithProducts(searchLast: String, dob: String): DonorWithProducts?
     fun handleSearchClick(searchKey: String) : List<Donor>
 //    fun handleSearchClickWithProducts(searchKey: String) : List<DonorWithProducts>
@@ -33,20 +29,6 @@ interface Repository {
 }
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
-
-//    private lateinit var mainAppDatabase: AppDatabase
-//    private lateinit var stagingAppDatabase: AppDatabase
-//    private val donorsService: APIInterface = APIClient.client
-
-//    override fun setAppDatabase(app: Application) {
-//        val dbList = AppDatabase.newInstance(app.applicationContext, MAIN_DATABASE_NAME, MODIFIED_DATABASE_NAME)
-//        mainAppDatabase = dbList[0]
-//        stagingAppDatabase = dbList[1]
-//    }
-//
-//    override fun isAppDatabaseInvalid(): Boolean {
-//        return databaseDonorCount(mainAppDatabase) == 0
-//    }
 
     override var screenWidth = 0
     override var screenHeight = 0
@@ -312,24 +294,6 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //        mainAppDatabase.databaseDao().insertDonorsAndProductLists(donors, products)
 //    }
 //
-//    override fun saveStagingDatabase(databaseName: String, db: File) {
-//        val dbShm = File(db.parent, "$databaseName-shm")
-//        val dbWal = File(db.parent, "$databaseName-wal")
-//        val dbBackup = File(db.parent, "$databaseName-backup")
-//        val dbShmBackup = File(db.parent, "$databaseName-backup-shm")
-//        val dbWalBackup = File(db.parent, "$databaseName-backup-wal")
-//        if (db.exists()) {
-//            db.copyTo(dbBackup, true)
-//        }
-//        if (dbShm.exists()) {
-//            dbShm.copyTo(dbShmBackup, true)
-//        }
-//        if (dbWal.exists()) {
-//            dbWal.copyTo(dbWalBackup, true)
-//        }
-//        LogUtils.D(LOG_TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.RPO), "Path Name $db exists and was backed up")
-//    }
-//
 //    /*
 //     *  The code below here does CRUD on the database
 //     */
@@ -339,9 +303,9 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 //     *   insertDonorIntoDatabase
 //     *   insertDonorAndProductsIntoDatabase
 //     *   insertReassociatedProductsIntoDatabase
-//     *   stagingDatabaseDonorAndProductsList
+//     *   donorAndProductsList
 //     *   donorFromNameAndDateWithProducts
-//     *   mainDatabaseDonorAndProductsList
+//     *   donorAndProductsList
 //     *   databaseDonorCount
 //     *   handleSearchClick
 //     *   handleSearchClickWithProducts
@@ -352,25 +316,25 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         Database(databaseDriverFactory).insertDonor(donor)
     }
 //
-    override fun insertDonorAndProductsIntoDatabase(donor: Donor, products: List<Product>) {
-        Database(databaseDriverFactory).insertDonorAndProductsIntoDatabase(donor, products)
+    override fun insertProductsIntoDatabase(products: List<Product>) {
+        Database(databaseDriverFactory).insertProductsIntoDatabase(products)
     }
 //
 //    override fun insertReassociatedProductsIntoDatabase(donor: Donor, products: List<Product>) {
 //        stagingAppDatabase.databaseDao().insertDonorAndProducts(donor, products)
 //    }
 //
-//    override fun stagingDatabaseDonorAndProductsList(): List<DonorWithProducts> {
-//        return stagingAppDatabase.databaseDao().loadAllDonorsWithProducts()
-//    }
-//
+    override fun donorAndProductsList(): List<DonorWithProducts> {
+        val donors = Database(databaseDriverFactory).getAllDonors()
+        return donors.map {
+            DonorWithProducts(donor = it, products = Database(databaseDriverFactory).selectProductsList(it.id))
+        }
+    }
+
     override fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts? {
         return Database(databaseDriverFactory).donorFromNameAndDateWithProducts(donor.lastName, donor.dob)
     }
-//
-//    override fun mainDatabaseDonorAndProductsList(): List<DonorWithProducts> {
-//        return mainAppDatabase.databaseDao().loadAllDonorsWithProducts()
-//    }
+
 //
 //    private fun databaseDonorCount(database: AppDatabase): Int {
 //        return database.databaseDao().getDonorEntryCount()
