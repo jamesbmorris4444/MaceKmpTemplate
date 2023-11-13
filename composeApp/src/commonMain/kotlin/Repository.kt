@@ -24,8 +24,6 @@ interface Repository {
     fun donorFromNameAndDateWithProducts(donor: Donor): DonorWithProducts?
     fun updateProductInReassociate(newValue: Boolean, id: Long)
     fun updateProductRemovedForReassociation(newValue: Boolean, id: Long)
-    fun updateDonorInReassociate(newValue: Boolean, id: Long)
-    fun updateDonorIdInProduct(newValue: Long, id: Long)
 }
 
 class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFactory: DatabaseDriverFactory) : Repository {
@@ -52,90 +50,6 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         val list = Database(databaseDriverFactory).getAllDonors()
         Logger.d("MACELOG: number of donors=${list.size}")
     }
-
-//    private fun createListOfProducts(donors: Int): List<Product> {
-//        for (index in 0 until donors) {
-//            val aboRh: String  = when (index) {
-//                0 -> { "O-Positive" }
-//                1 -> { "O-Negative" }
-//                2 -> { "A-Positive" }
-//                3 -> { "A-Negative" }
-//                4 -> { "B-Positive" }
-//                5 -> { "B-Negative" }
-//                6 -> { "AB-Positive" }
-//                7 -> { "AB-Negative" }
-//                8 -> { "O-Positive" }
-//                9 -> { "O-Negative" }
-//                10 -> { "A-Positive" }
-//                11 -> { "A-Negative" }
-//                12 -> { "B-Positive" }
-//                13 -> { "B-Negative" }
-//                14 -> { "AB-Positive" }
-//                15 -> { "AB-Negative" }
-//                16 -> { "O-Positive" }
-//                17 -> { "O-Negative" }
-//                18 -> { "A-Positive" }
-//                19 -> { "A-Negative" }
-//                else -> { "" }
-//            }
-//            val productCode = (random.nextInt(10000) + 9990000).toString()
-//            val jsonSubArray = JSONArray()
-//            for (productIndex in 0 until productCount) {
-//                val jsonObject = JSONObject()
-//                jsonObject.put("din", din)
-//                jsonObject.put("abo_rh", aboRh)
-//                jsonObject.put("product_code", productCode)
-//                jsonObject.put("expiration_date", "01 Jan 2020")
-//                jsonSubArray.put(jsonObject)
-//            }
-//
-//        }
-//        return jsonTopArray
-//    }
-
-//    private fun createListOfProducts(donors: Int) : List<Product> {
-//        val random = Random()
-//        val jsonTopArray = JSONArray()
-//        for (index in 0 until donors) {
-//            val productCount = random.nextInt(4)
-//            val din = random.nextInt(1000).toString()
-//            val aboRh: String  = when (index) {
-//                0 -> { "O-Positive" }
-//                1 -> { "O-Negative" }
-//                2 -> { "A-Positive" }
-//                3 -> { "A-Negative" }
-//                4 -> { "B-Positive" }
-//                5 -> { "B-Negative" }
-//                6 -> { "AB-Positive" }
-//                7 -> { "AB-Negative" }
-//                8 -> { "O-Positive" }
-//                9 -> { "O-Negative" }
-//                10 -> { "A-Positive" }
-//                11 -> { "A-Negative" }
-//                12 -> { "B-Positive" }
-//                13 -> { "B-Negative" }
-//                14 -> { "AB-Positive" }
-//                15 -> { "AB-Negative" }
-//                16 -> { "O-Positive" }
-//                17 -> { "O-Negative" }
-//                18 -> { "A-Positive" }
-//                19 -> { "A-Negative" }
-//                else -> { "" }
-//            }
-//            val productCode = (random.nextInt(10000) + 9990000).toString()
-//            val jsonSubArray = JSONArray()
-//            for (productIndex in 0 until productCount) {
-//                val jsonObject = JSONObject()
-//                jsonObject.put("din", din)
-//                jsonObject.put("abo_rh", aboRh)
-//                jsonObject.put("product_code", productCode)
-//                jsonObject.put("expiration_date", "01 Jan 2020")
-//                jsonSubArray.put(jsonObject)
-//            }
-//            jsonTopArray.put(jsonSubArray)
-//        }
-//        return jsonTopArray
-//    }
 
     private fun createListOfDonors() : List<Donor> {
         val donorList: MutableList<Donor> = mutableListOf()
@@ -283,35 +197,21 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         return donorList
     }
 
-//    private fun initializeDataBase(refreshCompleted: () -> Unit, donors: List<Donor>, products: List<List<Product>>) {
-//        List(donors.size) { donorIndex -> List(products[donorIndex].size) { productIndex -> products[donorIndex][productIndex].donorId = donors[donorIndex].id } }
-//        LogUtils.D(LOG_TAG, LogUtils.FilterTags.withTags(LogUtils.TagFilter.RPO), "initializeDataBase complete: donorsSize=${donors.size}")
-//        insertDonorsAndProductsIntoLocalDatabase(donors, products)
-//        refreshCompleted()
-//    }
-//
-//    private fun insertDonorsAndProductsIntoLocalDatabase(donors: List<Donor>, products: List<List<Product>>) {
-//        mainAppDatabase.databaseDao().insertDonorsAndProductLists(donors, products)
-//    }
-//
-//    /*
-//     *  The code below here does CRUD on the database
-//     */
-//    /**
-//     * The code below here does CRUD on the database
-//     * Methods:
-//     *   insertDonorIntoDatabase
-//     *   insertDonorAndProductsIntoDatabase
-//     *   insertReassociatedProductsIntoDatabase
-//     *   donorAndProductsList
-//     *   donorFromNameAndDateWithProducts
-//     *   donorAndProductsList
-//     *   databaseDonorCount
-//     *   handleSearchClick
-//     *   handleSearchClickWithProducts
-//     *   donorsFromFullNameWithProducts
-//     */
-//
+    /**
+     * The code below here does CRUD on the database
+     * Methods:
+     *   insertDonorIntoDatabase
+     *   insertProductsIntoDatabase
+     *   insertReassociatedProductsIntoDatabase
+     *   donorAndProductsList
+     *   donorFromNameAndDateWithProducts
+     *   donorAndProductsList
+     *   databaseDonorCount
+     *   handleSearchClick
+     *   handleSearchClickWithProducts
+     *   donorsFromFullNameWithProducts
+     */
+
     override fun insertDonorIntoDatabase(donor: Donor) {
         Database(databaseDriverFactory).insertDonor(donor)
     }
@@ -335,11 +235,6 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
         return Database(databaseDriverFactory).donorFromNameAndDateWithProducts(donor.lastName, donor.dob)
     }
 
-//
-//    private fun databaseDonorCount(database: AppDatabase): Int {
-//        return database.databaseDao().getDonorEntryCount()
-//    }
-//
     override fun handleSearchClick(searchKey: String) : List<Donor> {
         return Database(databaseDriverFactory).getDonors(searchKey)
 
@@ -382,14 +277,6 @@ class RepositoryImpl(private val sdk: SpaceXSDK, private val databaseDriverFacto
 
     override fun updateProductRemovedForReassociation(newValue: Boolean, id: Long) {
         Database(databaseDriverFactory).updateProductRemovedForReassociation(newValue = newValue, id = id)
-    }
-
-    override fun updateDonorInReassociate(newValue: Boolean, id: Long) {
-        Database(databaseDriverFactory).updateDonorInReassociate(newValue = newValue, id = id)
-    }
-
-    override fun updateDonorIdInProduct(newValue: Long, id: Long) {
-        Database(databaseDriverFactory).updateDonorIdInProduct(newValue = newValue, id = id)
     }
 //
 //    override fun donorsFromFullNameWithProducts(searchLast: String, dob: String): List<DonorWithProducts> {

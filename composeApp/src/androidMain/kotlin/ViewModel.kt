@@ -18,7 +18,6 @@ actual abstract class ViewModel : KMMViewModel(), KoinComponent {
     }
 
     actual val emptyDonor = Donor(0,"", "", "", "", "", "", false, false)
-    actual val emptyProduct = Product(0, 0,"", "", "", "", false, false)
 
     internal actual val privateRefreshCompletedState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     actual val refreshCompletedState: MutableStateFlow<Boolean>

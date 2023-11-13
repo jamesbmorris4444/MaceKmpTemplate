@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DrawerAppComponent(
-    bloodViewModel: BloodViewModel,
+    viewModel: BloodViewModel,
     repository: Repository
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -117,11 +117,11 @@ fun DrawerAppComponent(
     @Composable
     fun BodyContentComponent(
         navigator: Navigator,
-        openDrawer: () -> Unit,
-        bloodViewModel: BloodViewModel
+        viewModel: BloodViewModel,
+        openDrawer: () -> Unit
     ) {
         ScreenNavigator(
-            viewModel = bloodViewModel,
+            viewModel = viewModel,
             openDrawer = openDrawer,
             navigator = navigator,
 //            initialRoute = ScreenNames.RocketLaunch.name,
@@ -146,7 +146,7 @@ fun DrawerAppComponent(
                 BodyContentComponent(
                     navigator = navigator,
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
-                    bloodViewModel = bloodViewModel
+                    viewModel = viewModel
                 )
             }
         )

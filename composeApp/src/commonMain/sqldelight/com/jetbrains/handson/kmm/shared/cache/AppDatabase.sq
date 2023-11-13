@@ -14,12 +14,6 @@ insertDonor:
 INSERT INTO Donor(id, lastName, firstName, middleName, branch, aboRh, dob, gender, inReassociate)
 VALUES(?, ?, ?, ?, ?, ?, ?, ?, 0);
 
-updateDonorInReassociate:
-UPDATE Donor SET inReassociate = :newValue WHERE id = :id;
-
-lastInsertDonorId:
-SELECT last_insert_rowid();
-
 removeAllDonors:
 DELETE FROM Donor;
 

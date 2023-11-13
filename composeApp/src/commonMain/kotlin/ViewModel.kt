@@ -2,13 +2,13 @@ import com.jetbrains.handson.kmm.shared.cache.Donor
 import com.jetbrains.handson.kmm.shared.cache.Product
 import com.jetbrains.handson.kmm.shared.entity.DonorWithProducts
 import com.jetbrains.handson.kmm.shared.entity.RocketLaunch
+import com.rickclephas.kmm.viewmodel.KMMViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.StandardModalArgs
 
-expect abstract class ViewModel() {
-    protected fun onCleared()
+expect abstract class ViewModel() : KMMViewModel {
+    override fun onCleared()
     val emptyDonor: Donor
-    val emptyProduct: Product
     internal val privateRefreshCompletedState: MutableStateFlow<Boolean>
     val refreshCompletedState: MutableStateFlow<Boolean>
     internal val privateDatabaseInvalidState: MutableStateFlow<Boolean>
