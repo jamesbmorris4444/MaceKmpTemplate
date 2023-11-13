@@ -21,9 +21,9 @@ class MainActivity : ComponentActivity() {
     private val databaseDriverFactory = DatabaseDriverFactory(this)
     private val sdk = SpaceXSDK(databaseDriverFactory)
     private val repository = RepositoryImpl(sdk, databaseDriverFactory)
+    private val viewModel: BloodViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: BloodViewModel by viewModels()
         Strings.context = this
         repository.screenWidth = convertPixelsToDp(Resources.getSystem().displayMetrics.widthPixels.toFloat(), this).toInt()
         repository.screenHeight = convertPixelsToDp(Resources.getSystem().displayMetrics.heightPixels.toFloat(), this).toInt()

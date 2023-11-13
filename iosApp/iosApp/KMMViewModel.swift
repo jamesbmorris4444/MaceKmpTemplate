@@ -1,4 +1,4 @@
 import KMMViewModelCore
-import shared
+import commonMain
 
 extension Kmm_viewmodel_coreKMMViewModel: KMMViewModel { }

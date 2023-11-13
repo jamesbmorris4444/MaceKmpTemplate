@@ -1,5 +1,5 @@
 import SwiftUI
-import shared
+import commonMain
 
 @main
 struct iOSApp: App {
